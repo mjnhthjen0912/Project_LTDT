@@ -1,0 +1,147 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Google Maps API</title>
+    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script src="./GoogleMapsAPIScript.js"></script>
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <!-- Material Design icon font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="./mdl/material.css">
+    <link rel="stylesheet" href="./mdl/styles.css">
+
+</head>
+<body >
+<main class="mdl-layout__content mdl-color--grey-100" style="width: 100%; height: 100%; position: absolute;">
+    <div id="onload" class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--11-col mdl-grid" style="margin: auto; padding: 0 0 10px 0;">
+        <!-- MDL Spinner Component -->
+        <div class="mdl-spinner mdl-js-spinner is-active"></div>
+    </div>
+    <div id="control" class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--11-col mdl-grid" style="margin: auto; padding: 0 0 10px 0; display: none">
+        <!-- Textfield with Floating Label -->
+        <form action="#">
+            <div id="Keyword" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 150px; margin-left: 15px;" >
+                <input class="mdl-textfield__input" type="textarea" id="textboxKeyword">
+                <label class="mdl-textfield__label" for="textboxKeyword">Từ khóa tìm kiếm...</label>
+            </div>
+        </form>
+        <div style="font-size: 17px; margin-left: 15px">Tìm theo vị trí: </div>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1" style="margin-left: 15px; ">
+            <input type="radio" id="option-1" class="mdl-radio__button" name="radioLocation" value="1" onclick="changeLocationKind()" checked >
+            <span class="mdl-radio__label">Hiện tại</span>
+        </label>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2" style="margin-left: 15px; ">
+            <input type="radio" id="option-2" class="mdl-radio__button" name="radioLocation" value="2" onclick="changeLocationKind()">
+            <span class="mdl-radio__label">Chỉ định</span>
+        </label>
+
+        <!-- Textfield with Floating Label -->
+        <form action="#">
+            <div id="Start" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 150px; margin-left: 15px;" >
+                <input class="mdl-textfield__input" type="textarea" id="textboxStart" readonly>
+                <label class="mdl-textfield__label" for="textboxStart">Chọn điểm bắt đầu...</label>
+            </div>
+        </form>
+
+        <!-- Textfield with Floating Label -->
+        <form action="#">
+            <div id="End" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 150px; margin-left: 15px">
+                <input class="mdl-textfield__input" type="text" id="textboxEnd" readonly>
+                <label class="mdl-textfield__label" for="textboxEnd">Chọn điểm đến...</label>
+            </div>
+        </form>
+
+        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switchDestination" style="margin-left: 15px; width: initial;">
+            <input type="checkbox" id="switchDestination" class="mdl-switch__input" onclick="allowEndFunc()">
+            <span class="mdl-switch__label"></span>
+        </label>
+        <!-- Contact Chip -->
+        <span class="mdl-chip mdl-chip--contact" style="padding-right: 0; margin-left: 15px">
+            <span class="mdl-chip__contact mdl-color--pink-A200 mdl-color-text--white">
+                <i id="iconType" class="material-icons" style="font-size: 18px; line-height: 32px; margin-right: 1px;">local_hospital</i>
+            </span>
+            <span id="spanTextType" class="mdl-chip__text">Bệnh viện</span>
+            <span>
+                <button id="accbtn" class="mdl-button mdl-js-button mdl-button--icon">
+                    <i class="material-icons" role="presentation">arrow_drop_down</i>
+                    <span class="visuallyhidden">Type</span>
+                </button>
+            </span>
+        </span>
+
+        <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect" for="accbtn" style="height: 500px; overflow: auto;">
+            <li class="mdl-menu__item" onclick="changeType('hospital','Bệnh viện','local_hospital')">Bệnh viện</li>
+            <li class="mdl-menu__item" onclick="changeType('doctor','Bác sĩ','local_hospital')">Bác sĩ</li>
+            <li class="mdl-menu__item" onclick="changeType('veterinary_care','Chăm sóc Thú y','pets')">Chăm sóc Thú y</li>
+            <li class="mdl-menu__item" onclick="changeType('pharmacy','Tiệm thuốc','local_hospital')">Tiệm thuốc</li>
+            <li class="mdl-menu__item" onclick="changeType('gas_station','Trạm xăng','local_gas_station')">Trạm xăng</li>
+            <li class="mdl-menu__item" onclick="changeType('bus_station','Trạm xe buýt','directions_bus')">Trạm xe buýt</li>
+            <li class="mdl-menu__item" onclick="changeType('plumber','Thợ sửa ống nước','build')">Thợ sửa ống nước</li>
+            <li class="mdl-menu__item" onclick="changeType('locksmith','Thợ khóa','lock_open')">Thợ khóa</li>
+            <li class="mdl-menu__item" onclick="changeType('car_repair','Tiệm sửa xe','build')">Tiệm sửa xe</li>
+            <li class="mdl-menu__item" onclick="changeType('lodging','Khách sạn, nhà nghỉ, nhà trọ','home')">Khách sạn, nhà nghỉ, nhà trọ</li>
+            <li class="mdl-menu__item" onclick="changeType('police','Cảnh sát','accessibility')">Cảnh sát</li>
+            <li class="mdl-menu__item" onclick="changeType('atm','ATM','local_atm')">ATM</li>
+            <li class="mdl-menu__item" onclick="changeType('bank','Ngân hàng','account_balance')">Ngân hàng</li>
+            <li class="mdl-menu__item" onclick="changeType('airport', 'Sân bay', 'local_airport')">Sân bay</li>
+            <li class="mdl-menu__item" onclick="changeType('park','Công viên','local_parking')">Công viên</li>
+            <li class="mdl-menu__item" onclick="changeType('amusement_park','Công viên giải trí','local_parking')">Công viên giải trí</li>
+            <li class="mdl-menu__item" onclick="changeType('aquarium','Công viên thủy sinh','local_parking')">Công viên thủy sinh</li>
+            <li class="mdl-menu__item" onclick="changeType('cafe','Quán cafe','local_cafe')">Quán cafe</li>
+            <li class="mdl-menu__item" onclick="changeType('bar','Quán BAR','store')">Quán BAR</li>
+            <li class="mdl-menu__item" onclick="changeType('library','Thư viện','local_library')">Thư viện</li>
+            <li class="mdl-menu__item" onclick="changeType('book_store','Tiệm sách','store')">Tiệm sách</li>
+            <li class="mdl-menu__item" onclick="changeType('post_office','Bưu điện','local_post_office')">Bưu điện</li>
+            <li class="mdl-menu__item" onclick="changeType('restaurant','Nhà hàng','store')">Nhà hàng</li>
+            <li class="mdl-menu__item" onclick="changeType('store','Cửa hàng','store')">Cửa hàng</li>
+            <li class="mdl-menu__item" onclick="changeType('shopping_mall','Trung tâm mua sắm','shopping_cart')">Trung tâm mua sắm</li>
+            <li class="mdl-menu__item" onclick="changeType('bakery','Cửa hàng bánh mì','store')">Cửa hàng bánh mì</li>
+            <li class="mdl-menu__item" onclick="changeType('clothing_store','Cửa hàng quần áo','store')">Cửa hàng quần áo</li>
+            <li class="mdl-menu__item" onclick="changeType('convenience_store','Cửa hàng tiện dụng','store')">Cừa hàng tiện dụng</li>
+            <li class="mdl-menu__item" onclick="changeType('department_store','Cửa hàng bách hóa','store')">Cửa hàng bách hóa</li>
+            <li class="mdl-menu__item" onclick="changeType('electronics_store','Cửa hàng điện tử','videogame_asset')">Cửa hàng điện tử</li>
+            <li class="mdl-menu__item" onclick="changeType('bicycle_store','Cửa hàng xe đạp','store')">Cửa hàng xe đạp</li>
+            <li class="mdl-menu__item" onclick="changeType('gym','Phòng GYM','fitness_center')">Phòng GYM</li>
+            <li class="mdl-menu__item" onclick="changeType('laundry','Giặt ủi','local_laundry_service')">Giặt ủi</li>
+            <li class="mdl-menu__item" onclick="changeType('school','Trường học','school')">Trường học</li>
+            <li class="mdl-menu__item" onclick="changeType('parking','Bãi đỗ xe','local_parking')">Bãi đỗ xe</li>
+            <li class="mdl-menu__item" onclick="changeType('taxi_stand','Nơi đón taxi','local_taxi')">Nơi đón taxi</li>
+            <li class="mdl-menu__item" onclick="changeType('train_station','Ga xe lửa','train')">Ga xe lửa</li>
+            <li class="mdl-menu__item" onclick="changeType('campground','Nơi cắm trại','beach_access')">Nơi cắm trại</li>
+            <li class="mdl-menu__item" onclick="changeType('stadium','Sân vận động','directions_run')">Sân vận động</li>
+        </ul>
+
+        <div>
+        <div style="font-size: 13px; margin-left: 15px">Tốc độ</div>
+        <!-- Slider with Starting Value -->
+        <input id="sliderSpeed" class="mdl-slider mdl-js-slider" type="range"
+               min="1" max="100" value="75" step="1" tabindex="0" oninput="changeSpeed()" onchange="changeSpeed()">
+        </div>
+        <!-- Accent-colored raised button with ripple -->
+        <button id="run" onclick="searchDirection()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="margin: auto">
+            Tìm kiếm
+        </button>
+    </div>
+    <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--11-col mdl-grid" style="margin: auto">
+        <div id="searchMap" class="demo-charts mdl-color--white mdl-shadow--2dp" style="margin: 10px; border-radius: 3px;">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable" style="padding: 15px">
+                <label class="mdl-button mdl-js-button mdl-button--icon" for="searchTextBox" style="top: 13px;">
+                    <i class="material-icons">search</i>
+                </label>
+                <div class="mdl-textfield__expandable-holder" style="width: 450px">
+                    <input class="mdl-textfield__input" type="text" id="searchTextBox" placeholder="Tìm kiếm trên Google Maps...">
+                    <label class="mdl-textfield__label" for="searchTextBox">Tìm kiếm trên Google Maps...</label>
+                </div>
+            </div>
+        </div>
+        <div id="left-panel" class="demo-charts mdl-color--pink-100 mdl-shadow--2dp"
+             style="margin: 10px; padding: 0 10px; border-radius: 4px; max-height: 400px; width: 300px; overflow: auto;"></div>
+        <div id="map" style="position: relative; width: 1360px; height: 600px" ></div>
+        <div id="warnings-panel"></div>
+    </div>
+
+</main>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOZTu3oQQZuepU7XDCVKL1KxPShXeQoMc&libraries=places&region=VN&callback=initMap">
+</script>
+</body>
+</html>
